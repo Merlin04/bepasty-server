@@ -36,9 +36,7 @@ dependencies = [
     "xstatic < 2.0.0",
     "XStatic-asciinema-player <= 2.6.1.1",
     "xstatic-font-awesome >= 6.0.0, <= 6.2.1.1",
-    "xstatic-pygments <= 2.9.0.1",
-    "setuptools>=82.0.0",
-    "pillow>=12.1.1",
+    "xstatic-pygments <= 2.9.0.1"
 ]
 
 [project.scripts]
