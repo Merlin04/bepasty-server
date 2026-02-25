@@ -55,25 +55,63 @@
             <noscript><br><button id="fileupload-submit" class="button is-success">Upload</button></noscript>
         </form>
     </div>
-    <div class="column is-4">
-        <!-- item name list assembled here and offered for submission -->
-        <form id="filelist-form" style="display: none" action="{{ url_for('bepasty.upload') }}" method="POST" enctype="multipart/form-data">
-            <div class="mb-3">
-                <textarea class="textarea" id="filelist" name="text" rows="10" cols="40"></textarea>
+    <div id="right-panel" class="column is-4">
+        <div id="filelist-form" style="display: none">
+            <div class="tabs is-boxed">
+                <ul>
+                    <li>
+                        <label>
+                            <input id="tab-list" type="radio" name="tabs" checked>
+                            <a>Create list</a>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input id="tab-copy" type="radio" name="tabs">
+                            <a>Copy URLs</a>
+                        </label>
+                    </li>
+                </ul>
             </div>
-            {{ maximum_lifetime() }}
-            <input type="hidden" name="contenttype" value="text/x-bepasty-list">
-            <div class="field has-addons">
-                <p class="control is-expanded">
-                    <input class="input" type="text" id="filelist-filename" name="filename" size="23" placeholder="optional list-name">
-                </p>
-                <p class="control">
-                    <button class="button is-success">Create List</button>
-                </p>
+            <!-- item name list assembled here and offered for submission -->
+            <form id="tab-list-body" action="{{ url_for('bepasty.upload') }}" method="POST" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <textarea class="textarea" id="filelist" name="text" rows="10" cols="40"></textarea>
+                </div>
+                {{ maximum_lifetime() }}
+                <input type="hidden" name="contenttype" value="text/x-bepasty-list">
+                <div class="field has-addons">
+                    <p class="control is-expanded">
+                        <input class="input" type="text" id="filelist-filename" name="filename" size="23" placeholder="optional list-name">
+                    </p>
+                    <p class="control">
+                        <button class="button is-success">Create List</button>
+                    </p>
+                </div>
+            </form>
+            <div id="tab-copy-body">
+                <div class="tabs is-small mb-0">
+                    <ul>
+                        <li>
+                            <label>
+                                <input id="tab-inline" type="radio" name="copy-type" checked>
+                                <a>Inline</a>
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input id="tab-preview" type="radio" name="copy-type">
+                                <a>Preview</a>
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+                <code id="tab-copy-inline-body"></code>
+                <code id="tab-copy-preview-body"></code>
             </div>
-        </form>
-        <!-- Uploaded files -->
-        <div id="files" class="files"></div>
+            <!-- Uploaded files -->
+            <div id="files" class="files mt-5"></div>
+        </div>
     </div>
 </div>
 
@@ -108,6 +146,69 @@
 {% block extra_link %}
 {% if may(CREATE) %}
 <link href="https://unpkg.com/filepond@^4/dist/filepond.css" rel="stylesheet" />
+<style>
+#tab-copy-body {
+    margin-top: -1rem;
+}
+
+#tab-copy-body code {
+    display: block;
+    cursor: pointer;
+    position: relative;
+    padding-top: 1.25em;
+    border-radius: 0 0 0.5em 0.5em;
+}
+
+#tab-copy-body code:hover {
+    background-color: var(--bulma-background-hover);
+}
+
+#tab-copy-body code::before {
+    content: "Copy";
+    position: absolute;
+    right: 0;
+    top: 0;
+    color: var(--bulma-body-color);
+    background-color: rgba(0 0 0 / 0.1);
+    border-radius: 0 0 0 0.5em;
+    padding: 0 0.5em;
+    font-family: var(--bulma-family-primary);
+    font-size: 0.8em;
+}
+
+#tab-copy-body code.copied::before {
+    content: "Copied";
+}
+
+#right-panel:has(#tab-list:not(:checked)) #tab-list-body,
+#right-panel:has(#tab-copy:not(:checked)) #tab-copy-body,
+#tab-copy-body:has(#tab-inline:not(:checked)) #tab-copy-inline-body,
+#tab-copy-body:has(#tab-preview:not(:checked)) #tab-copy-preview-body {
+  display: none;
+}
+
+.tabs input {
+    opacity: 0;
+    position: absolute;
+    pointer-events: none;
+}
+
+.tabs a {
+    transition: none;
+}
+
+.tabs label:has(input:checked) a {
+    border-bottom-color: var(--bulma-tabs-link-active-border-bottom-color);
+    color: var(--bulma-tabs-link-active-color);
+}
+
+.tabs.is-boxed label:has(input:checked) a {
+    background-color: var(--bulma-tabs-boxed-link-active-background-color) !important;
+    border-color: var(--bulma-tabs-boxed-link-active-border-color) !important;
+    border-bottom-color: var(--bulma-tabs-boxed-link-active-border-bottom-color) !important;
+    color: var(--bulma-tabs-link-active-color);
+}
+</style>
 {% endif %}
 {% endblock %}
 

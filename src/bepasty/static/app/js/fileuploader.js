@@ -57,6 +57,17 @@ function process(fieldName, file, metadata, load, error, progress, abort, transf
         fileList.textContent += name + "\n";
         const fileListForm = document.getElementById("filelist-form");
         fileListForm.style.display = "";
+
+        const previewBody = document.getElementById("tab-copy-preview-body");
+        const inlineBody = document.getElementById("tab-copy-inline-body");
+        const urlEl = document.createElement("span");
+        urlEl.dataset.name = name;
+        urlEl.append(window.location + name, document.createElement("br"));
+        previewBody.appendChild(urlEl);
+        const urlInlineEl = document.createElement("span");
+        urlInlineEl.dataset.name = name;
+        urlInlineEl.append(urlEl.innerText + "/+inline", document.createElement("br"));
+        inlineBody.appendChild(urlInlineEl);
       }
     };
 
@@ -113,11 +124,9 @@ function revert(uniqueFileId, load, error) {
   const name = uniqueFileId.split("#")[0].slice(1)
   fetch(`/${name}/+delete`, { method: "POST" })
     .then(res => {
-      console.log("wahoo");
-      console.log(res);
       if (!res.ok) throw new Error(`Delete failed: ${res.status}`);
 
-      document.querySelector(`#files div[data-name=${name}]`).remove();
+      document.querySelectorAll(`#right-panel [data-name=${name}]`).forEach(v=>v.remove());
 
       const fileList = document.getElementById("filelist");
       fileList.textContent = fileList.textContent
@@ -145,4 +154,16 @@ const fp = FilePond.create(document.getElementById("filepond"), {
     remove: null,
     process
   }
+});
+
+document.querySelectorAll("#tab-copy-body code").forEach(el => {
+  let t;
+  el.addEventListener("click", async _ => {
+    await navigator.clipboard.writeText(el.innerText);
+    el.classList.add("copied");
+    if (t) window.clearTimeout(t);
+    t = setTimeout(() => {
+      el.classList.remove("copied");
+    }, 1500);
+  });
 });
