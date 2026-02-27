@@ -124,7 +124,8 @@
 
 {% block extra_link %}
 <!-- Pygments styles -->
-<link rel="stylesheet" href="{{ url_for('bepasty.xstatic', name='pygments', filename='css/colorful.css') }}" type="text/css">
+<link rel="stylesheet" href="{{ url_for('bepasty.xstatic', name='pygments', filename='css/monokai.css') }}" media="(prefers-color-scheme: dark)">
+<link rel="stylesheet" href="{{ url_for('bepasty.xstatic', name='pygments', filename='css/colorful.css') }}" media="not (prefers-color-scheme: dark)">
 <!-- asciinema styles -->
 <link rel="stylesheet" href="{{ url_for('bepasty.xstatic', name='asciinema_player', filename='asciinema-player.css') }}" type="text/css">
 {% endblock %}

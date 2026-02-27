@@ -85,6 +85,18 @@ table.highlighttable {
     border-left: 1px solid #ccc;
 }
 
+@media (prefers-color-scheme: dark) {
+    .line-highlight {
+        background-color: hsl(var(--bulma-warning-h), var(--bulma-warning-s), 15%);
+    }
+    table.highlighttable {
+        border: 1px solid var(--bulma-dark);
+    }
+    .highlight pre {
+        border-left: 1px solid var(--bulma-dark);
+    }
+}
+
 /* Set minimal width and let the contents push the block width */
 .linenos {
     width: 1px;
